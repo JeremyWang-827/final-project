@@ -1,0 +1,118 @@
+f = open("demofile.txt", "r")
+
+print(f.read())
+
+import random
+
+
+class Cards:
+    def SSR(self):
+        SSRs = ["Michel Jordan", "Lebron James", "Kobe Bryant"]
+        return SSRs
+
+    def SR(self):
+        SRs = ["Stephen Curry", "James Harden", "Paul George", "Kawhi Leonard", "Dwyane Wade", "Vince Carter", "Anthony Davis"]
+        return SRs
+
+    def R(self):
+        Rs = ["Jrue Holiday", "Jalen Brown", "Jason Tatum", "Dwight Howard", "Josh Hart", "Lonzo Ball", "Trea Young", "Mike McGee", "Zach LaVine", "Jeremy Lin"]
+        return Rs
+
+
+user = []
+# ssr drop rate，sr drop rate
+drop_rate = [20, 100]
+# money
+game_money = 0
+# user draws not ssr times
+no_ssr = 0
+user_data = [0, 0, 0, 0, 0]
+# history money，drawing times，ssr numbers，sr numbers, r numbers
+
+
+def per_inf():
+    global game_money
+    b = int(input("1-account balance，2-owned characters"))
+    if b == 1:
+        a = input("your left account balance is {}，Recharge？(Y/N)".format(game_money))
+        if "Y" in a:
+            game_money += 1200
+            user_data[0] += 648
+            print("You've paid 648 dollars，your account balance is {}".format(game_money))
+    elif b == 2:
+        print("you have: ")
+        for i in range(len(user)-4):
+            print("{}, {}, {}, {}, {};".format(user[i], user[i+1], user[i+2], user[i+3], user[i+4]))
+    return user_data[0]
+
+
+def draw():
+    global game_money, no_ssr
+    get = []
+    if game_money >= 30:
+        game_money -= 30
+        chance = random.randint(1, 1000)
+        if no_ssr == 100:
+            chance = 1
+        if chance <= drop_rate[0]:
+            SSR = random.randint(0, len(Cards.SSR()) - 1)
+            user.append(Cards.SSR()[SSR])
+            get.append(Cards.SSR()[SSR])
+            user_data[2] += 1
+            no_ssr = 0
+        elif chance <= drop_rate[0] + drop_rate[1]:
+            SR = random.randint(0, len(Cards.SR()) - 1)
+            user.append(Cards.SR()[SR])
+            get.append(Cards.SR()[SR])
+            user_data[3] += 1
+            no_ssr += 1
+        else:
+            R = random.randint(0, len((Cards.R())) - 1)
+            user.append((Cards.R())[R])
+            get.append((Cards.R())[R])
+            user_data[4] += 1
+            no_ssr += 1
+        user_data[1] += 1
+        print("congradulation! You get {}".format(get))
+    else:
+        print("You have no money left")
+    return user_data[1], user_data[2], user_data[3], user_data[4]
+
+
+def Def_drop():
+    if user_data[0] > 1000 or user_data[2] > 3:
+        drop_rate[0] = 15
+    if user_data[0] > 3000 or user_data[2] > 5:
+        drop_rate[0] = 10
+    return drop_rate[0]
+
+
+print("Welcome to NBA Fantasy")
+class Person:
+  def __init__(self, fname, lname):
+    self.firstname = fname
+    self.lastname = lname
+
+  def printname(self):
+    print(self.firstname, self.lastname)
+
+#Use the Person class to create an object, and then execute the printname method:
+
+x = Person("Jeremy", "Wang")
+x.printname()
+
+while True:
+    choice = int(input("1-personal information，2-draw once， 3-draw tence"))
+    drop_rate[0] = Def_drop()
+    if choice == 1:
+        user_data[0] = per_inf()
+    elif choice == 2:
+        user_data[1], user_data[2], user_data[3], user_data[4] = draw()
+    elif choice == 3:
+        if game_money >= 300:
+            for i in range(10):
+                user_data[1], user_data[2], user_data[3], user_data[4] = draw()
+        else:
+            print("not enough money")
+    else:
+        print("error")
